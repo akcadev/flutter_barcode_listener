@@ -118,9 +118,10 @@ class _BarcodeKeyboardListenerState extends State<BarcodeKeyboardListener> {
     _scannedChars.add(charCode);
   }
 
-  void _keyBoardCallback(RawKeyEvent keyEvent) {
+ void _keyBoardCallback(RawKeyEvent keyEvent) {
     if (keyEvent.logicalKey.keyId > 255 &&
         keyEvent.data.logicalKey != LogicalKeyboardKey.enter &&
+        keyEvent.data.logicalKey != LogicalKeyboardKey.numpadEnter &&
         keyEvent.data.logicalKey != LogicalKeyboardKey.shiftLeft) return;
     if ((!_useKeyDownEvent && keyEvent is RawKeyUpEvent) ||
         (_useKeyDownEvent && keyEvent is RawKeyDownEvent)) {
@@ -131,7 +132,8 @@ class _BarcodeKeyboardListenerState extends State<BarcodeKeyboardListener> {
           if (_isShiftPressed && _caseSensitive) {
             _isShiftPressed = false;
             _controller.sink.add(String.fromCharCode(
-                ((keyEvent.data) as RawKeyEventDataAndroid).codePoint).toUpperCase());
+                    ((keyEvent.data) as RawKeyEventDataAndroid).codePoint)
+                .toUpperCase());
           } else {
             _controller.sink.add(String.fromCharCode(
                 ((keyEvent.data) as RawKeyEventDataAndroid).codePoint));
@@ -140,7 +142,8 @@ class _BarcodeKeyboardListenerState extends State<BarcodeKeyboardListener> {
       } else if (keyEvent.data is RawKeyEventDataFuchsia) {
         _controller.sink.add(String.fromCharCode(
             ((keyEvent.data) as RawKeyEventDataFuchsia).codePoint));
-      } else if (keyEvent.data.logicalKey == LogicalKeyboardKey.enter) {
+      } else if (keyEvent.data.logicalKey == LogicalKeyboardKey.enter ||
+          keyEvent.data.logicalKey == LogicalKeyboardKey.numpadEnter) {
         _controller.sink.add(lineFeed);
       } else if (keyEvent.data is RawKeyEventDataWeb) {
         _controller.sink.add(((keyEvent.data) as RawKeyEventDataWeb).keyLabel);
