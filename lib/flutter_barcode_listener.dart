@@ -32,26 +32,25 @@ class BarcodeKeyboardListener extends StatefulWidget {
   /// It will buffer all characters coming in specifed `bufferDuration` time frame
   /// that end with line feed character and call callback function with result.
   /// Keep in mind this widget will listen for events even when not visible.
-  BarcodeKeyboardListener(
-      {Key? key,
+  BarcodeKeyboardListener({
+    Key? key,
 
-      /// Child widget to be displayed.
-      required this.child,
+    /// Child widget to be displayed.
+    required this.child,
 
-      /// Callback to be called when barcode is scanned.
-      required Function(String) onBarcodeScanned,
+    /// Callback to be called when barcode is scanned.
+    required Function(String) onBarcodeScanned,
 
-      /// When experiencing issueswith empty barcodes on Windows,
-      /// set this value to true. Default value is `false`.
-      this.useKeyDownEvent = false,
+    /// When experiencing issueswith empty barcodes on Windows,
+    /// set this value to true. Default value is `false`.
+    this.useKeyDownEvent = false,
 
-      /// Maximum time between two key events.
-      /// If time between two key events is longer than this value
-      /// previous keys will be ignored.
-      Duration bufferDuration = hundredMs,
-      this.caseSensitive = false,
-      })
-      : _onBarcodeScanned = onBarcodeScanned,
+    /// Maximum time between two key events.
+    /// If time between two key events is longer than this value
+    /// previous keys will be ignored.
+    Duration bufferDuration = hundredMs,
+    this.caseSensitive = false,
+  })  : _onBarcodeScanned = onBarcodeScanned,
         _bufferDuration = bufferDuration,
         super(key: key);
 
@@ -118,10 +117,9 @@ class _BarcodeKeyboardListenerState extends State<BarcodeKeyboardListener> {
     _scannedChars.add(charCode);
   }
 
- void _keyBoardCallback(RawKeyEvent keyEvent) {
+  void _keyBoardCallback(RawKeyEvent keyEvent) {
     if (keyEvent.logicalKey.keyId > 255 &&
         keyEvent.data.logicalKey != LogicalKeyboardKey.enter &&
-        keyEvent.data.logicalKey != LogicalKeyboardKey.numpadEnter &&
         keyEvent.data.logicalKey != LogicalKeyboardKey.shiftLeft) return;
     if ((!_useKeyDownEvent && keyEvent is RawKeyUpEvent) ||
         (_useKeyDownEvent && keyEvent is RawKeyDownEvent)) {
@@ -142,10 +140,15 @@ class _BarcodeKeyboardListenerState extends State<BarcodeKeyboardListener> {
       } else if (keyEvent.data is RawKeyEventDataFuchsia) {
         _controller.sink.add(String.fromCharCode(
             ((keyEvent.data) as RawKeyEventDataFuchsia).codePoint));
-      } else if (keyEvent.data.logicalKey == LogicalKeyboardKey.enter ||
-          keyEvent.data.logicalKey == LogicalKeyboardKey.numpadEnter) {
+      } else if (keyEvent.data.logicalKey == LogicalKeyboardKey.enter) {
         _controller.sink.add(lineFeed);
-      } else if (keyEvent.data is RawKeyEventDataWeb) {
+      } else if (keyEvent.data.logicalKey == LogicalKeyboardKey.numpadEnter) {
+        _controller.sink.add(lineFeed);
+      } else if (keyEvent.data.logicalKey == LogicalKeyboardKey.tab) {
+        _controller.sink.add(lineFeed);
+      },else if (keyEvent.data.logicalKey == LogicalKeyboardKey.tvNumberEntry) {
+        _controller.sink.add(lineFeed);
+      }  else if (keyEvent.data is RawKeyEventDataWeb) {
         _controller.sink.add(((keyEvent.data) as RawKeyEventDataWeb).keyLabel);
       } else if (keyEvent.data is RawKeyEventDataLinux) {
         _controller.sink
