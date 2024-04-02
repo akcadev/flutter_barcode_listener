@@ -146,7 +146,7 @@ class _BarcodeKeyboardListenerState extends State<BarcodeKeyboardListener> {
         _controller.sink.add(lineFeed);
       } else if (keyEvent.data.logicalKey == LogicalKeyboardKey.tab) {
         _controller.sink.add(lineFeed);
-      },else if (keyEvent.data.logicalKey == LogicalKeyboardKey.tvNumberEntry) {
+      }else if (keyEvent.data.logicalKey == LogicalKeyboardKey.tvNumberEntry) {
         _controller.sink.add(lineFeed);
       }  else if (keyEvent.data is RawKeyEventDataWeb) {
         _controller.sink.add(((keyEvent.data) as RawKeyEventDataWeb).keyLabel);
