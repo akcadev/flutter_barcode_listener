@@ -121,51 +121,7 @@ class _BarcodeKeyboardListenerState extends State<BarcodeKeyboardListener> {
     if (keyEvent.logicalKey.keyId > 255 &&
         keyEvent.data.logicalKey != LogicalKeyboardKey.enter &&
         keyEvent.data.logicalKey != LogicalKeyboardKey.shiftLeft) return;
-    if ((!_useKeyDownEvent && keyEvent is RawKeyUpEvent) ||
-        (_useKeyDownEvent && keyEvent is RawKeyDownEvent)) {
-      if (keyEvent.data is RawKeyEventDataAndroid) {
-        if (keyEvent.data.logicalKey == LogicalKeyboardKey.shiftLeft) {
-          _isShiftPressed = true;
-        } else {
-          if (_isShiftPressed && _caseSensitive) {
-            _isShiftPressed = false;
-            _controller.sink.add(String.fromCharCode(
-                    ((keyEvent.data) as RawKeyEventDataAndroid).codePoint)
-                .toUpperCase());
-          } else {
-            _controller.sink.add(String.fromCharCode(
-                ((keyEvent.data) as RawKeyEventDataAndroid).codePoint));
-          }
-        }
-      } else if (keyEvent.data is RawKeyEventDataFuchsia) {
-        _controller.sink.add(String.fromCharCode(
-            ((keyEvent.data) as RawKeyEventDataFuchsia).codePoint));
-      } else if (keyEvent.data.logicalKey == LogicalKeyboardKey.enter) {
-        _controller.sink.add(lineFeed);
-      } else if (keyEvent.data.logicalKey == LogicalKeyboardKey.numpadEnter) {
-        _controller.sink.add(lineFeed);
-      } else if (keyEvent.data.logicalKey == LogicalKeyboardKey.tab) {
-        _controller.sink.add(lineFeed);
-      }else if (keyEvent.data.logicalKey == LogicalKeyboardKey.tvNumberEntry) {
-        _controller.sink.add(lineFeed);
-      }  else if (keyEvent.data is RawKeyEventDataWeb) {
-        _controller.sink.add(((keyEvent.data) as RawKeyEventDataWeb).keyLabel);
-      } else if (keyEvent.data is RawKeyEventDataLinux) {
-        _controller.sink
-            .add(((keyEvent.data) as RawKeyEventDataLinux).keyLabel);
-      } else if (keyEvent.data is RawKeyEventDataWindows) {
-        _controller.sink.add(String.fromCharCode(
-            ((keyEvent.data) as RawKeyEventDataWindows).keyCode));
-      } else if (keyEvent.data is RawKeyEventDataMacOs) {
-        _controller.sink
-            .add(((keyEvent.data) as RawKeyEventDataMacOs).characters);
-      } else if (keyEvent.data is RawKeyEventDataIos) {
-        _controller.sink
-            .add(((keyEvent.data) as RawKeyEventDataIos).characters);
-      } else {
-        _controller.sink.add(keyEvent.character);
-      }
-    }
+    _controller.sink.add(lineFeed);
   }
 
   @override
